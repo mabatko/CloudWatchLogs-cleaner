@@ -27,9 +27,13 @@ def lambda_handler(event, context):
                 if 'lastEventTimestamp' in lsn:
                     if int(lsn['lastEventTimestamp']) < timeNow - 2678400000:
                         # if last event is older than 31 days
-                        print(lsn['logStreamName'] + " will be deleted.")
+                        print(lsn['logStreamName'] + " is old and will be deleted.")
                         ls2delete = ls2delete + 1
                         cwl.delete_log_stream(logGroupName=lgn['logGroupName'], logStreamName=lsn['logStreamName'])
+                else:
+                    print(lsn['logStreamName'] + " is empty and will be deleted.")
+                    ls2delete = ls2delete + 1
+                    cwl.delete_log_stream(logGroupName=lgn['logGroupName'], logStreamName=lsn['logStreamName'])
 
             if 'nextToken' in cwls:
                 nextToken = cwls['nextToken']
